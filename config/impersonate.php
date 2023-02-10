@@ -25,3 +25,5 @@ return [
     'delete_after_logout' => true,
 
 ];
+
+//app(\D2my\Impersonate\Services\ImpersonateService::class)->existsByToken(Cookie::get('impersonate_token'))

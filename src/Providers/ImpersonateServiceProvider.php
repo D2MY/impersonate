@@ -21,12 +21,7 @@ class ImpersonateServiceProvider extends ServiceProvider
             ], 'impersonate-config');
 
             $this->publishes([
-                __DIR__ . '/../../src/Http/Middleware/Impersonate.php' => app_path('Http/Middleware/Impersonate/Impersonate.php'),
-            ], 'impersonate-middleware');
-
-            $this->publishes([
                 __DIR__ . '/../../config/impersonate.php' => config_path('impersonate.php'),
-                __DIR__ . '/../../src/Http/Middleware/Impersonate.php' => app_path('Http/Middleware/Impersonate/Impersonate.php'),
             ], 'impersonate');
         }
 
