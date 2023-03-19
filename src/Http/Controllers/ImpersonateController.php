@@ -28,7 +28,7 @@ final class ImpersonateController
 
         $this->service->logout($request);
 
-        $this->service->setCookie($id);
+        $this->service->setCookie($token);
 
         $this->service->login($id);
 
