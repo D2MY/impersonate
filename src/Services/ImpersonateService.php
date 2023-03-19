@@ -94,7 +94,7 @@ final class ImpersonateService
      */
     public function unsetCookie(): void
     {
-        Cookie::forget('impersonate_token');
+        Cookie::queue(Cookie::forget('impersonate_token'));
     }
 
     /**
