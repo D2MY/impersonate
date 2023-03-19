@@ -2,19 +2,14 @@
 
 namespace D2my\Impersonate\Services;
 
-use D2my\Impersonate\Repositories\ImpersonateRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 final class ImpersonateService
 {
-    /**
-     * @param  ImpersonateRepository  $repository
-     */
-    public function __construct(private readonly ImpersonateRepository $repository) {}
-
     /**
      * @return string
      */
@@ -31,7 +26,13 @@ final class ImpersonateService
      */
     public function store(mixed $user, mixed $admin, string $token): void
     {
-        $this->repository->store($user, $admin, $token);
+        DB::connection(config('impersonate.connection'))
+            ->table(config('impersonate.table.name'))
+            ->insert([
+                'user' => $user,
+                'admin' => $admin,
+                'token' => $token
+            ]);
     }
 
     /**
@@ -40,7 +41,7 @@ final class ImpersonateService
      */
     public function logout(Request $request): void
     {
-        Auth::logout();
+        Auth::guard(config('impersonate.user_guard'))->logout();
 
         $request->session()->invalidate();
 
@@ -53,7 +54,7 @@ final class ImpersonateService
      */
     public function login(mixed $id): void
     {
-        Auth::loginUsingId($id, true);
+        Auth::guard(config('impersonate.user_guard'))->loginUsingId($id, true);
     }
 
     /**
@@ -72,7 +73,20 @@ final class ImpersonateService
      */
     public function getIdByToken(string $token, bool $delete): mixed
     {
-        return $this->repository->getByToken($token, $delete)->admin;
+        $result = DB::connection(config('impersonate.connection'))
+            ->table(config('impersonate.table.name'))
+            ->where('token', $token)
+            ->first()
+            ->admin;
+
+        if ($delete) {
+            DB::connection(config('impersonate.connection'))
+                ->table(config('impersonate.table.name'))
+                ->where('token', $token)
+                ->delete();
+        }
+
+        return $result;
     }
 
     /**
@@ -89,6 +103,10 @@ final class ImpersonateService
      */
     public function existsByToken(string $token): bool
     {
-        return $this->repository->existsByToken($token);
+        return
+            DB::connection(config('impersonate.connection'))
+                ->table(config('impersonate.table.name'))
+                ->where('token', $token)
+                ->exists();
     }
 }

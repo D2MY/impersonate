@@ -2,28 +2,50 @@
 
 return [
 
-    'migrate' => false,
+    //Подключение к базе с юзерами
+    'connection' => 'mysql',
 
-    'table_identifier_type' => 'unsignedBigInteger',
+    // Guard из config/auth.php, определяющий способ авторизации
+    'user_guard' => 'web',
 
-    'table_identifier_options' => [],
+    'table' => [
+        // Название таблицы с токенами
+        'name' => 'impersonate_tokens',
 
-    'table' => 'impersonate_tokens',
+        'identifier' => [
+            // Тип столбца идентификатора юзеров
+            'type' => 'unsignedBigInteger',
 
-    'login_middleware' => [],
+            // Дополнительные опции для поля идентификатора
+            // $table->{config('impersonate.table_identifier_type')}('admin', ...\Illuminate\Support\Arr::wrap(config('impersonate.table_identifier_options')));
+            'options' => [],
+        ],
+    ],
 
-    'login_name' => 'impersonate.login',
+    'route' => [
+        'login' => [
+            // Middleware для роута логина, в группе обязательно должен быть миддлвар старта сессии
+            'middleware' => ['web'],
 
-    'login_redirect' => 'profile',
+            // Имя роута логина
+            'name' => 'impersonate.login',
 
-    'logout_middleware' => [],
+            // Имя роута для редиректа после логина
+            'redirect' => 'profile',
+        ],
+        'logout' => [
+            // Middleware для роута логаута, в группе обязательно должен быть миддлвар старта сессии
+            'middleware' => ['web', \D2my\Impersonate\Http\Middleware\ImpersonateLogout::class],
 
-    'logout_name' => 'impersonate.logout',
+            // Имя роута логаута
+            'name' => 'impersonate.logout',
 
-    'logout_redirect' => 'admin',
+            // Имя роута для редиректа после логаута
+            'redirect' => 'admin',
+        ],
+    ],
 
-    'delete_after_logout' => true,
+    // Удалять запись из таблицы о токене после логаута
+    'delete_after_logout' => false,
 
 ];
-
-//app(\D2my\Impersonate\Services\ImpersonateService::class)->existsByToken(Cookie::get('impersonate_token'))

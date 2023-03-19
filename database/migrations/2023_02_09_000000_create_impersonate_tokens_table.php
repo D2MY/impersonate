@@ -13,9 +13,9 @@ class CreateImpersonateTokensTable extends Migration
      */
     public function up(): void
     {
-        Schema::create('impersonate_token', function (Blueprint $table) {
-            $table->{config('impersonate.table_identifier_type', 'unsignedBigInteger')}('admin', ...\Illuminate\Support\Arr::wrap(config('impersonate.table_identifier_options', [])));
-            $table->{config('impersonate.table_identifier_type', 'unsignedBigInteger')}('user', ...\Illuminate\Support\Arr::wrap(config('impersonate.table_identifier_options', [])));
+        Schema::connection(config('impersonate.connection'))->create(config('impersonate.table.name'), function (Blueprint $table) {
+            $table->{config('impersonate.table.identifier.type')}('admin', ...\Illuminate\Support\Arr::wrap(config('impersonate.table.identifier.options')));
+            $table->{config('impersonate.table.identifier.type')}('user', ...\Illuminate\Support\Arr::wrap(config('impersonate.table.identifier.options')));
             $table->string('token');
         });
     }
@@ -27,6 +27,6 @@ class CreateImpersonateTokensTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('impersonate_token');
+        Schema::connection(config('impersonate.connection'))->dropIfExists(config('impersonate.table.name'));
     }
 }
