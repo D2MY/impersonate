@@ -25,7 +25,7 @@ return [
     'route' => [
         'login' => [
             // Middleware для роута логина, в группе обязательно должен быть миддлвар старта сессии
-            'middleware' => ['web'],
+            'middleware' => ['web', \D2my\Impersonate\Http\Middleware\ImpersonateLogin::class],
 
             // Имя роута логина
             'name' => 'impersonate.login',
