@@ -20,7 +20,7 @@ class ImpersonateServiceProvider extends ServiceProvider
             ], 'impersonate');
         } else {
             Blade::directive('impersonate', function () {
-                return "<?php if(cookie()->has('impersonate_token')): ?>";
+                return "<?php if(\Illuminate\Support\Facades\Cookie::has('impersonate_token')): ?>";
             });
 
             Blade::directive('endimpersonate', function () {
