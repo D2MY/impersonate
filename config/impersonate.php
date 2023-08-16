@@ -11,6 +11,13 @@ return [
     //название гейта для проверки доступности логина под другим юзером
     'gate' => null,
 
+    'logging' => [
+        'enable' => false,
+
+        //канал логирования
+        'channel' => null
+    ],
+
     'table' => [
         // Название таблицы с токенами
         'name' => 'impersonate_tokens',

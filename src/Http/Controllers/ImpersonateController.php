@@ -24,6 +24,10 @@ final class ImpersonateController
     {
         $token = $this->service->getToken();
 
+        if (config('impersonate.logging.enable'))
+            Log::channel(config('impersonate.logging.channel'))
+                ->info('Impersonate login. Admin - '.Auth::guard(config('impersonate.user_guard'))->id().'. User - '.$id);
+
         $this->service->store($id, Auth::guard(config('impersonate.user_guard'))->id(), $token);
 
         $this->service->logout($request);
@@ -41,9 +45,15 @@ final class ImpersonateController
      */
     public function logout(Request $request): RedirectResponse
     {
+        $user = Auth::guard(config('impersonate.user_guard'))->id();
+
         $this->service->logout($request);
 
         $id = $this->service->getIdByToken(Cookie::get('impersonate_token'), (bool)config('impersonate.delete_after_logout'));
+
+        if (config('impersonate.logging.enable'))
+            Log::channel(config('impersonate.logging.channel'))
+                ->info('Impersonate logout. Admin - '.$id.'. User - '.$user);
 
         $this->service->unsetCookie();
 
