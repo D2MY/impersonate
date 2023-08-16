@@ -20,10 +20,18 @@ class ImpersonateServiceProvider extends ServiceProvider
             ], 'impersonate');
         } else {
             Blade::directive('impersonate', function () {
+                return "<?php if(!config('impersonate.gate') || \Illuminate\Support\Facades\Gate::allows(config('impersonate.gate'))): ?>";
+            });
+
+            Blade::directive('endImpersonate', function () {
+                return "<?php endif; ?>";
+            });
+
+            Blade::directive('impersonateLogout', function () {
                 return "<?php if(\Illuminate\Support\Facades\Cookie::has('impersonate_token')): ?>";
             });
 
-            Blade::directive('endimpersonate', function () {
+            Blade::directive('endImpersonateLogout', function () {
                 return "<?php endif; ?>";
             });
         }

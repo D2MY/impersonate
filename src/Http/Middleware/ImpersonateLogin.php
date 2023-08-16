@@ -17,8 +17,8 @@ class ImpersonateLogin
     public function handle($request, Closure $next)
     {
         if (
-            !$request->hasCookie('impersonate_token')
-            || app(ImpersonateService::class)->getIdByToken($request->cookie('impersonate_token'), false) === Auth::guard(config('impersonate.user_guard'))->id()
+            (!config('impersonate.gate') || \Illuminate\Support\Facades\Gate::allows(config('impersonate.gate')))
+            && (!$request->hasCookie('impersonate_token') || app(ImpersonateService::class)->getIdByToken($request->cookie('impersonate_token'), false) === Auth::guard(config('impersonate.user_guard'))->id())
         ) {
             return $next($request);
         }

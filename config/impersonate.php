@@ -8,6 +8,9 @@ return [
     // Guard из config/auth.php, определяющий способ авторизации
     'user_guard' => 'web',
 
+    //название гейта для проверки доступности логина под другим юзером
+    'gate' => null,
+
     'table' => [
         // Название таблицы с токенами
         'name' => 'impersonate_tokens',
