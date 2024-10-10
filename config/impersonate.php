@@ -41,7 +41,7 @@ return [
             'name' => 'impersonate.login',
 
             // Урл для редиректа после логина
-            'redirect' => '', //route('profile')
+            'redirect' => 'profile',
         ],
         'logout' => [
             // Middleware для роута логаута, в группе обязательно должен быть миддлвар старта сессии
@@ -51,7 +51,7 @@ return [
             'name' => 'impersonate.logout',
 
             // Урл для редиректа после логаута
-            'redirect' => '', //route('admin')
+            'redirect' => 'admin',
         ],
     ],
 

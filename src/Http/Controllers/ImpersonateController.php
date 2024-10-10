@@ -38,7 +38,9 @@ final class ImpersonateController
 
         $this->service->login($id);
 
-        return redirect($request->query('redirect_to', config('impersonate.route.login.redirect')));
+        return $request->has('redirect_to')
+            ? redirect($request->query('redirect_to'))
+            : redirect()->route(config('impersonate.route.login.redirect'));
     }
 
     /**
@@ -61,6 +63,8 @@ final class ImpersonateController
 
         $this->service->login($id);
 
-        return redirect($request->query('redirect_to', config('impersonate.route.logout.redirect')));
+        return $request->has('redirect_to')
+            ? redirect($request->query('redirect_to'))
+            : redirect()->route(config('impersonate.route.logout.redirect'));
     }
 }
