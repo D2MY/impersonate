@@ -43,8 +43,8 @@ final class ImpersonateController
             Session::push(config('impersonate.route.login.session_name'), $request->header('referer'));
         }
 
-        return $request->query('redirect_to')
-            ? redirect($request->query('redirect_to'))
+        return ($redirect = $request->query('redirect_to'))
+            ? redirect(is_array($redirect) ? $redirect[0] : $redirect)
             : redirect()->route(config('impersonate.route.login.redirect'));
     }
 
@@ -68,8 +68,8 @@ final class ImpersonateController
 
         $this->service->login($id);
 
-        return $request->query('redirect_to')
-            ? redirect($request->query('redirect_to'))
+        return ($redirect = $request->query('redirect_to'))
+            ? redirect(is_array($redirect) ? $redirect[0] : $redirect)
             : redirect()->route(config('impersonate.route.logout.redirect'));
     }
 }
