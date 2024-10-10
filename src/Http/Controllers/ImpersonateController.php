@@ -40,7 +40,7 @@ final class ImpersonateController
         $this->service->login($id);
 
         if (config('impersonate.route.login.save_location')) {
-            Session::push(config('impersonate.route.login.session_name'), $request->fullUrl());
+            Session::push(config('impersonate.route.login.session_name'), $request->header('referer'));
         }
 
         return $request->query('redirect_to')
