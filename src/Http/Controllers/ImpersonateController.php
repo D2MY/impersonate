@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 final class ImpersonateController
 {
@@ -38,7 +39,11 @@ final class ImpersonateController
 
         $this->service->login($id);
 
-        return $request->has('redirect_to')
+        if (config('impersonate.route.login.save_location')) {
+            Session::push(config('impersonate.route.login.session_name'), $request->fullUrl());
+        }
+
+        return $request->query('redirect_to')
             ? redirect($request->query('redirect_to'))
             : redirect()->route(config('impersonate.route.login.redirect'));
     }
@@ -63,7 +68,7 @@ final class ImpersonateController
 
         $this->service->login($id);
 
-        return $request->has('redirect_to')
+        return $request->query('redirect_to')
             ? redirect($request->query('redirect_to'))
             : redirect()->route(config('impersonate.route.logout.redirect'));
     }

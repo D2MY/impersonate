@@ -34,6 +34,12 @@ return [
 
     'route' => [
         'login' => [
+            // Сохранять урл страницы откуда происходил логин
+            'save_location' => true,
+
+            // Ключ сессии для сохранения урла
+            'session_name' => 'impersonate.login.location',
+
             // Middleware для роута логина, в группе обязательно должен быть миддлвар старта сессии
             'middleware' => ['web', \D2my\Impersonate\Http\Middleware\ImpersonateLogin::class],
 
